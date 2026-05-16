@@ -49,6 +49,13 @@ Fact Tables:
 
 # Key Takeaway
 
+This solution implements a scalable and efficient incremental data loading framework using watermark logic. It ensures optimized data movement, reduces processing time, and maintains data consistency through dynamic pipeline orchestration and automated watermark updates.
+
+- Built an end-to-end data engineering pipeline
+- Implemented metadata-driven ingestion
+- Used incremental loading for efficiency
+- Designed scalable cloud architecture
+
 
 
 
