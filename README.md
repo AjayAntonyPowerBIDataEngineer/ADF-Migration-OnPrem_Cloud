@@ -36,9 +36,20 @@ Fact Tables:
 - FactPayments
 - FactReturns etc.
 
-# ADF pipeline Logic 
+# DataWarehouse Configurations
 
 ![image_alt](https://github.com/AjayAntonyPowerBIDataEngineer/ADF-Migration-OnPrem_Cloud/blob/0289f6070d8240eb93de80f27719ff5381d7fd3e/DataWarehouse%20Configuration.png)
+
+# ADF Pipeline Logic
+
+- Lookup activity retrieves table metadata
+- ForEach loop processes tables dynamically
+- Condition checks if new records exist
+- Copy activity loads data to ADLS
+
+# Key Takeaway
+
+
 
 
 
