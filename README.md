@@ -22,11 +22,27 @@ This orchestration pattern improves scalability, minimizes redundant processing,
 
 # Data Warehouse Model
 
-Star Schema used for analytics
-Dimension Tables: DimCustomer, DimProduct, DimDate, DimRegion, DimStore etc.
-Fact Tables: FactSales, FactOrders, FactPayments, FactReturns etc.
+### Star Schema used for analytics
+Dimension Tables:
+- DimCustomer
+- DimProduct
+- DimDate
+- DimRegion
+- DimStore etc.
+  
+Fact Tables:
+- FactSales
+- FactOrders
+- FactPayments
+- FactReturns etc.
 
-# ADF Pipeline Logic
+# ADF pipeline Logic 
+
+![image_alt](https://github.com/AjayAntonyPowerBIDataEngineer/ADF-Migration-OnPrem_Cloud/blob/0289f6070d8240eb93de80f27719ff5381d7fd3e/DataWarehouse%20Configuration.png)
+
+
+
+
 
 
 
