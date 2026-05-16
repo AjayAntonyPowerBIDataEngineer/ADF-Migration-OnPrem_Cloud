@@ -1,6 +1,8 @@
-# ADF-Migration-OnPrem_Cloud
-ADF Migration On Prem SQL Server to Cloud
+# Azure Data Factory Data Migration On Premise SQL Server to Cloud ADLS GEN 2
 
+Modern organizations generate large volumes of operational data in on-premise systems. To enable scalable analytics and reporting, this data must be efficiently migrated to the cloud.
+
+This project demonstrates an end-to-end data engineering pipeline that extracts data from an On-Premise SQL Server, processes it using Azure Data Factory, and stores it in Azure Data Lake Storage Gen2. The pipeline implements a metadata-driven incremental loading strategy using a watermark table, ensuring that only new or updated records are processed.
 
 
 # Solution Architecture 
@@ -17,3 +19,16 @@ During the initial execution, if the LastLoadValue is 0, the pipeline performs a
 For subsequent executions, the pipeline performs incremental extraction by identifying records where the source watermark column value is greater than the previously processed LastLoadValue. To prevent accidental duplicate ingestion, additional validation logic ensures that if the maximum watermark value equals the existing LastLoadValue, the pipeline skips the append operation.
 
 This orchestration pattern improves scalability, minimizes redundant processing, and ensures efficient incremental fact and dimension data movement using Azure Data Factory, SQL Server stored procedures, and Parquet-based storage.
+
+# Data Warehouse Model
+
+Star Schema used for analytics
+Dimension Tables: DimCustomer, DimProduct, DimDate, DimRegion, DimStore etc.
+Fact Tables: FactSales, FactOrders, FactPayments, FactReturns etc.
+
+# ADF Pipeline Logic
+
+
+
+
+
