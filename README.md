@@ -4,6 +4,18 @@ Modern organizations generate large volumes of operational data in on-premise sy
 
 This project demonstrates an end-to-end data engineering pipeline that extracts data from an On-Premise SQL Server, processes it using Azure Data Factory, and stores it in Azure Data Lake Storage Gen2. The pipeline implements a metadata-driven incremental loading strategy using a watermark table, ensuring that only new or updated records are processed.
 
+# 📌 Table of Contents
+- [Business Problem](#business-problem)
+- [Tech Stack](#tech-stack)
+- [Data Warehouse Model](#data-warehouse-model)
+- [DataWarehouse Configurations](#datawarehouse-configurations)
+- [ADF Pipeline Logic](#adf-pipeline-logic)
+- [Master Pipeline execution ](#master-pipeline-execution)
+- [Child Pipeline Execution](#child-pipeline-execution)
+- [Project Structure](#project-structure)
+- [Business Impact](#business-impact)
+- [Author & Contact](#author-&-contact)
+
 # Business Problem
 
 Organizations relying on on-premises SQL Server environments often face challenges in building scalable and efficient data ingestion frameworks for analytics and reporting. Traditional ETL processes commonly result in:
@@ -113,15 +125,6 @@ For an incremental load, only records where the watermark column value is greate
 The extracted data is then written to the sink layer in dynamically generated date-based folders using the format DD/MM/YYYY.
 
 This entire pipeline leverages a Self-Hosted Integration Runtime (SHIR) to securely establish connectivity between Azure Data Factory and the on-premises SQL Server environment for data ingestion and orchestration.
-
-# Key Takeaway
-
-This solution implements a scalable and efficient incremental data loading framework using watermark logic. It ensures optimized data movement, reduces processing time, and maintains data consistency through dynamic pipeline orchestration and automated watermark updates.
-
-- Built an end-to-end data engineering pipeline
-- Implemented metadata-driven ingestion
-- Used incremental loading for efficiency
-- Designed scalable cloud architecture
 
 # Project Structure
 ```plaintext
