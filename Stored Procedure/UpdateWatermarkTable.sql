@@ -1,0 +1,31 @@
+USE [VisionBoard]
+GO
+/****** Object:  StoredProcedure [dbo].[UpdateWatermark]    Script Date: 17-05-2026 20:55:19 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER   PROCEDURE [dbo].[UpdateWatermark] 
+@TableSchema VARCHAR(50),
+@TableName VARCHAR(100),
+@WatermarkColumn VARCHAR(100)
+AS
+BEGIN
+
+DECLARE @SQL NVARCHAR(MAX)
+DECLARE @MaxValue BIGINT
+
+SET @SQL =
+'SELECT @MaxVal = MAX(' + @WatermarkColumn + ')
+ FROM ' + @TableSchema + '.' + @TableName
+
+EXEC sp_executesql
+@SQL,
+N'@MaxVal BIGINT OUTPUT',
+@MaxVal=@MaxValue OUTPUT
+
+UPDATE dbo.ADF_Watermark_Table
+SET LastLoadValue = @MaxValue
+WHERE TableName = @TableName
+
+END
