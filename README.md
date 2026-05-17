@@ -50,7 +50,7 @@ Fact Tables:
 # Master Pipeline execution 
 
 ![image_alt](https://github.com/AjayAntonyPowerBIDataEngineer/ADF-Migration-OnPrem_Cloud/blob/aa68766f66d3437aaff24afa122e573429bbfcff/masterpipelineexecution.png)
-
+The Lookup activity retrieves metadata from the watermark table through a stored procedure hosted on the on-premises SQL Server. It extracts details such as LastLoadValue, TableName, and SchemaName. The pipeline then iterates through the retrieved records using a ForEach activity and dynamically passes the metadata to the Child Pipeline for incremental data ingestion and processing.
 
 # Child Pipeline Execution
 
