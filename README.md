@@ -55,8 +55,23 @@ The Lookup activity retrieves metadata from the watermark table through a stored
 
 # Child Pipeline Execution
 
-![image_alt](https://github.com/AjayAntonyPowerBIDataEngineer/ADF-Migration-OnPrem_Cloud/blob/15caa70080790b7bc8031f457fa5d2413a54c737/Child%20Pipeline%20execution.png)
+![image_alt](https://github.com/AjayAntonyPowerBIDataEngineer/ADF-Migration-OnPrem_Cloud/blob/8ad69fa0a26814d521491171b17bfb36b134fd90/Childpipeline2.png)
 
+The pipeline begins with a Lookup activity that retrieves the maximum value of the watermark column from the source table. This value is then passed to an If Condition activity to determine whether a full load or incremental load should be executed.
+
+The If Condition logic evaluates the following scenarios:
+
+If the LastLoadValue in the watermark table is NULL, the pipeline performs a full load.
+If the current maximum watermark value from the source table is greater than the LastLoadValue stored in the watermark table, the pipeline performs an incremental load.
+
+Under the True condition, the Copy activity dynamically generates the source query based on the load type:
+
+For a full load, all records are extracted from the source table.
+For an incremental load, only records where the watermark column value is greater than the stored LastLoadValue are extracted.
+
+The extracted data is then written to the sink layer in dynamically generated date-based folders using the format DD/MM/YYYY.
+
+This entire pipeline leverages a Self-Hosted Integration Runtime (SHIR) to securely establish connectivity between Azure Data Factory and the on-premises SQL Server environment for data ingestion and orchestration.
 
 # Key Takeaway
 
@@ -67,7 +82,18 @@ This solution implements a scalable and efficient incremental data loading frame
 - Used incremental loading for efficiency
 - Designed scalable cloud architecture
 
+# Business Impact
 
+This solution modernizes enterprise analytics by leveraging Microsoft Azure Data Factory (ADF) and on-premises SQL Server integration to securely ingest and process data from source systems into a scalable Lakehouse architecture. The platform transforms raw operational data into business-ready insights, enabling stakeholders to monitor sales performance, optimize logistics and delivery operations, improve customer experience, and drive data-driven decision-making through centralized and governed analytics reporting.
+
+# Author & Contact
+
+Ajay Suresh
+Azure Data Engineer | Power BI Developer
+
+💼 Focus Areas: Azure Data Engineering, ETL Pipelines, PySpark, Data Warehousing, Power BI
+- 🔗 LinkedIn Portfolio
+- 🔗 GitHub Projects
 
 
 
