@@ -4,6 +4,47 @@ Modern organizations generate large volumes of operational data in on-premise sy
 
 This project demonstrates an end-to-end data engineering pipeline that extracts data from an On-Premise SQL Server, processes it using Azure Data Factory, and stores it in Azure Data Lake Storage Gen2. The pipeline implements a metadata-driven incremental loading strategy using a watermark table, ensuring that only new or updated records are processed.
 
+# Business Problem
+
+Organizations relying on on-premises SQL Server environments often face challenges in building scalable and efficient data ingestion frameworks for analytics and reporting. Traditional ETL processes commonly result in:
+
+Data silos across operational systems
+Manual and inefficient data movement processes
+High latency in reporting and analytics
+Difficulty handling incremental data loads
+Limited scalability for growing enterprise datasets
+Lack of centralized and governed data storage
+
+The objective of this project is to design and implement a scalable Azure-based data ingestion solution capable of:
+
+- ✅ Securely connecting to on-premises SQL Server using Self-Hosted Integration Runtime (SHIR)
+- ✅ Performing dynamic full and incremental data loads using watermark-based processing
+- ✅ Automating parent-child pipeline orchestration in Azure Data Factory (ADF)
+- ✅ Storing enterprise data efficiently in Azure Data Lake Storage Gen2 (ADLS Gen2) as Parquet files
+- ✅ Enabling scalable downstream analytics and reporting workloads
+- ✅ Reducing data movement overhead through metadata-driven pipeline execution
+
+# Tech Stack 
+
+| Technology | Purpose |
+|---|---|
+| Microsoft Azure | Cloud platform for scalable data integration and engineering infrastructure |
+| Azure Data Factory (ADF) | Pipeline orchestration, workflow automation, and metadata-driven ingestion |
+| On-Premises SQL Server | Enterprise source system for operational data extraction |
+| Self-Hosted Integration Runtime (SHIR) | Secure connectivity between Azure and on-premises environments |
+| Azure Data Lake Storage Gen2 (ADLS Gen2) | Scalable cloud storage for sink layer and Parquet file storage |
+| Parquet Format | Optimized columnar storage format for scalable analytics workloads |
+| SQL | Source querying, watermark logic, and stored procedure execution |
+| Stored Procedures | Metadata retrieval and watermark update processing |
+| Watermark Table Logic | Incremental load tracking and change data processing |
+| Dynamic Pipelines | Reusable parent-child pipeline orchestration framework |
+| Lookup Activity | Dynamic retrieval of metadata and watermark values |
+| Copy Activity | Data extraction and movement from source to sink |
+| If Condition Activity | Conditional execution for full and incremental data loads |
+| ForEach Activity | Iterative execution of child pipelines using metadata-driven orchestration |
+| JSON | Configuration format for ADF pipelines, datasets, linked services, and runtime definitions |
+| GitHub | Version control and project documentation |
+
 
 # Solution Architecture 
 
@@ -82,6 +123,67 @@ This solution implements a scalable and efficient incremental data loading frame
 - Used incremental loading for efficiency
 - Designed scalable cloud architecture
 
+# Project Structure
+```plaintext
+adf-onprem-sqlserver-incremental-ingestion/
+│
+├── README.md
+│
+├── architecture/
+│   └── solution_architecture.png
+│
+├── datasets/
+│   ├── DS_SQL_PARQUET1.json
+│   ├── DS_SQL_PARQUET_FILES.json
+│   ├── DS_SQL_PARQUET_FILES_2.json
+│   ├── LKP_MAX_VALUE.json
+│   └── OnPremSQLLKP.json
+│
+├── pipelines/
+│   ├── parent_pipeline/
+│   │   ├── Parent Pipeline Orchestration.json
+│   │   └── Test Parent Pipeline.json
+│   │
+│   ├── child_pipeline_incremental/
+│   │   ├── Child Pipeline Incremental.json
+│   │   └── Test Child Pipeline Incremental.json
+│   │
+│   └── child_pipeline_stored_procedure/
+│       ├── Child Pipeline Stored Procedure.json
+│       └── Test Child Pipeline Stored Procedure.json
+│
+├── linked_services/
+│   ├── LS_ADLSGEN2.json
+│   └── SqlServer1.json
+│
+├── integration_runtime/
+│   └── IRONPREM.json
+│
+├── sql/
+│   ├── stored_procedures/
+│   │   └── UpdateWatermarkTable.sql
+│   │
+│   └── fact_scripts/
+│       └── dimfactscript.sql
+│
+├── factory/
+│   └── adfmigration11.json
+│
+├── sink_storage/
+│   └── parquet_files_dd_mm_yyyy/
+│
+├── workflows/
+│   └── incremental_load_workflow.md
+│
+├── docs/
+│   ├── implementation_notes/
+│   ├── pipeline_execution_flow/
+│   └── watermark_incremental_logic/
+│
+└── publish_config/
+    └── publish_config.json
+```
+
 # Business Impact
 
 This solution modernizes enterprise analytics by leveraging Microsoft Azure Data Factory (ADF) and on-premises SQL Server integration to securely ingest and process data from source systems into a scalable Lakehouse architecture. The platform transforms raw operational data into business-ready insights, enabling stakeholders to monitor sales performance, optimize logistics and delivery operations, improve customer experience, and drive data-driven decision-making through centralized and governed analytics reporting.
@@ -94,12 +196,6 @@ Azure Data Engineer | Power BI Developer
 💼 Focus Areas: Azure Data Engineering, ETL Pipelines, PySpark, Data Warehousing, Power BI
 - 🔗 LinkedIn Portfolio
 - 🔗 GitHub Projects
-
-
-
-
-
-
-
+  
 
 
