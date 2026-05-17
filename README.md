@@ -47,6 +47,14 @@ Fact Tables:
 - Condition checks if new records exist
 - Copy activity loads data to ADLS
 
+# Master Pipeline execution 
+
+
+
+
+# Child Pipeline Execution
+
+
 # Key Takeaway
 
 This solution implements a scalable and efficient incremental data loading framework using watermark logic. It ensures optimized data movement, reduces processing time, and maintains data consistency through dynamic pipeline orchestration and automated watermark updates.
