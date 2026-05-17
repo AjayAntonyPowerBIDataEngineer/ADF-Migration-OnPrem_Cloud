@@ -49,10 +49,12 @@ Fact Tables:
 
 # Master Pipeline execution 
 
-
+![image_alt](https://github.com/AjayAntonyPowerBIDataEngineer/ADF-Migration-OnPrem_Cloud/blob/15caa70080790b7bc8031f457fa5d2413a54c737/Child%20Pipeline%20execution.png)
 
 
 # Child Pipeline Execution
+
+![image_alt](https://github.com/AjayAntonyPowerBIDataEngineer/ADF-Migration-OnPrem_Cloud/blob/15caa70080790b7bc8031f457fa5d2413a54c737/Child%20Pipeline%20execution.png)
 
 
 # Key Takeaway
