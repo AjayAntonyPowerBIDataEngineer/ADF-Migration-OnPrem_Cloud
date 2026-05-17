@@ -1,0 +1,100 @@
+{
+	"name": "Test Parent Pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "OnPremSQLLKP",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT \n\t\tTableSchema , TableName , WatermarkColumn , LastLoadValue \n\tFROM \n[dbo].[ADF_Watermark_Table] ;",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "OnPremSQLLKP",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEachSQLTable",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "OnPremSQLLKP",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('OnPremSQLLKP').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "EXC_PIPELINECHILD",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Test Child Pipeline Incremental",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"tablename": {
+										"value": "@item().TableSchema",
+										"type": "Expression"
+									},
+									"tableschema": {
+										"value": "@item().TableSchema",
+										"type": "Expression"
+									},
+									"lastloadvalue": {
+										"value": "@item().LastLoadValue",
+										"type": "Expression"
+									},
+									"watermarkcolumn": {
+										"value": "@item().WatermarkColumn",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"testoploop": {
+				"type": "Array"
+			}
+		},
+		"folder": {
+			"name": "Test_Migration_Pipeline"
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-04-28T15:37:29Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

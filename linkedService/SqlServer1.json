@@ -1,0 +1,24 @@
+{
+	"name": "SqlServer1",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"server": ".\\SQLEXPRESS",
+			"database": "VisionBoard",
+			"encrypt": "True",
+			"trustServerCertificate": true,
+			"authenticationType": "SQL",
+			"userName": "sa",
+			"pooling": "False",
+			"multipleActiveResultSets": "False",
+			"commandTimeout": "0",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIzYTAwMmE5Ni0wZjY1LTRiMjctOWI2NS0wMTY0ZmRkNTM3MDEiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "IRONPREM",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

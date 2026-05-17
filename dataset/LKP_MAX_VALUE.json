@@ -1,0 +1,24 @@
+{
+	"name": "LKP_MAX_VALUE",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServer1",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tablename": {
+				"type": "string"
+			},
+			"schemaname": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "DS_DEV_Folder"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

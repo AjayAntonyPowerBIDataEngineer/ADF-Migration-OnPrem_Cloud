@@ -1,0 +1,38 @@
+{
+	"name": "OnPremSQLLKP",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServer1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DS_DEV_Folder"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "TableSchema",
+				"type": "varchar"
+			},
+			{
+				"name": "TableName",
+				"type": "varchar"
+			},
+			{
+				"name": "WatermarkColumn",
+				"type": "varchar"
+			},
+			{
+				"name": "LastLoadValue",
+				"type": "bigint",
+				"precision": 19
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "ADF_Watermark_Table"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

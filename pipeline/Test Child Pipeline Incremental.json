@@ -1,0 +1,176 @@
+{
+	"name": "Test Child Pipeline Incremental",
+	"properties": {
+		"activities": [
+			{
+				"name": "LKP_MAX_VALUE",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": {
+							"value": "SELECT \n    MAX(@{pipeline().parameters.watermarkcolumn}) AS MaxValue\nFROM \n    @{pipeline().parameters.tableschema}.@{pipeline().parameters.tablename}",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "LKP_MAX_VALUE",
+						"type": "DatasetReference",
+						"parameters": {
+							"tablename": {
+								"value": "@pipeline().parameters.tablename",
+								"type": "Expression"
+							},
+							"schemaname": {
+								"value": "@pipeline().parameters.tableschema",
+								"type": "Expression"
+							}
+						}
+					}
+				}
+			},
+			{
+				"name": "If Condition1",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "LKP_MAX_VALUE",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@or(\n    equals(pipeline().parameters.lastloadvalue, null),\n    greater(\n        int(activity('LKP_MAX_VALUE').output.firstRow.MaxValue),\n        int(pipeline().parameters.lastloadvalue)\n    )\n)",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "COPY_SQL_FULL_INC_LOAD_TABLE",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": {
+										"value": "@concat(\n    'SELECT * FROM ',\n    pipeline().parameters.tableschema, '.',\n    pipeline().parameters.tablename,\n    if(\n        equals(pipeline().parameters.lastloadvalue, null),\n        '',\n        concat(\n            ' WHERE ',\n            pipeline().parameters.watermarkcolumn,\n            ' > ''',\n            pipeline().parameters.lastloadvalue,\n            ''''\n        )\n    )\n)",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "LKP_MAX_VALUE",
+									"type": "DatasetReference",
+									"parameters": {
+										"tablename": {
+											"value": "@pipeline().parameters.tablename",
+											"type": "Expression"
+										},
+										"schemaname": {
+											"value": "@pipeline().parameters.tableschema",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DS_SQL_PARQUET_FILES_2",
+									"type": "DatasetReference",
+									"parameters": {
+										"Folder": "@concat(   pipeline().parameters.tablename, '/',   formatDateTime(utcNow(),'yyyy'), '/',   formatDateTime(utcNow(),'MM'), '/',   formatDateTime(utcNow(),'dd') )"
+									}
+								}
+							]
+						},
+						{
+							"name": "EXEC_UPDATE_WATERMARK",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "COPY_SQL_FULL_INC_LOAD_TABLE",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Test Child Pipeline Stored Procedure",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"tablename": {
+				"type": "string"
+			},
+			"tableschema": {
+				"type": "string"
+			},
+			"lastloadvalue": {
+				"type": "string"
+			},
+			"watermarkcolumn": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Test_Migration_Pipeline"
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-04-28T15:37:28Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

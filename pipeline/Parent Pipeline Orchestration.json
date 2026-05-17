@@ -1,0 +1,143 @@
+{
+	"name": "Parent Pipeline Orchestration",
+	"properties": {
+		"activities": [
+			{
+				"name": "OnPremSQLLKP",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT  \n\tTableSchema, TableName, WatermarkColumn, LastLoadValue\nFROM\n\tdbo.ADF_Watermark_Table;",
+						"queryTimeout": "02:00:00",
+						"isolationLevel": "ReadCommitted",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "OnPremSQLLKP",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEachSQLTable",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "FilterDBDIMPRODUCT",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('FilterDBDIMPRODUCT').output.Value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "EXC_PIPELINECHILD",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Child Pipeline Incremental",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"tableschema": {
+										"value": "@item().TableSchema",
+										"type": "Expression"
+									},
+									"tablename": {
+										"value": "@item().TableName",
+										"type": "Expression"
+									},
+									"watermarkcolumn": {
+										"value": "@item().WatermarkColumn",
+										"type": "Expression"
+									},
+									"lastloadvalue": {
+										"value": "@item().LastLoadValue",
+										"type": "Expression"
+									}
+								}
+							}
+						},
+						{
+							"name": "Output",
+							"type": "SetVariable",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "IteratorVal",
+								"value": {
+									"value": "@array(item())",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "FilterDBDIMPRODUCT",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "OnPremSQLLKP",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('OnPremSQLLKP').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@and(\r\n    equals(toLower(item().tableschema),'dbo'),\r\n    equals(toLower(item().tablename),'dimproduct')\r\n)",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"IteratorVal": {
+				"type": "Array"
+			}
+		},
+		"folder": {
+			"name": "Dev_migration_pipeline"
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-04-28T15:28:57Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

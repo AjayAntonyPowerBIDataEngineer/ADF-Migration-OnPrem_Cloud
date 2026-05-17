@@ -1,0 +1,32 @@
+{
+	"name": "DS_SQL_PARQUET1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLSGEN2",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"foldername": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "DS_DEV_Folder"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@dataset().foldername",
+					"type": "Expression"
+				},
+				"fileSystem": "devlandingzone"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
